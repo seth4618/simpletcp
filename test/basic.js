@@ -3,8 +3,6 @@
 var assert = require('assert');
 var TCPClient=require('..').client();
 var TCPServer=require('..').server();
-console.log(TCPServer);
-var LineConnection=require('..').LineConnection();
 
 var showAll = false;            // set to true if you want to see all kinds of logging info
 var allfinished = 0;
