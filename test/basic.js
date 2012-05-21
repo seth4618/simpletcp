@@ -2,67 +2,38 @@
 
 var assert = require('assert');
 var TCPClient=require('..').client();
-var server=require('..').server().server.server;
+var TCPServer=require('..').server().server.server;
+console.log(TCPServer);
 var LineConnection=require('..').server().server.LineConnection;
 
+var showAll = false;            // set to true if you want to see all kinds of logging info
 var allfinished = 0;
 var serverstarted = 0;
+var useport = 0;
 
-function MyConnection(server, socket)
+function startConnection(conn)
 {
-    MyConnection.super_.call(this, server, socket);
+    conn.on('data', function(str) {     conn.write("I just got: "+str); });
+    conn.on('connect', function(str) {  conn.write("Hi"); });
+    //conn.on('end', function() { console.log('connection is done')f; });
+    conn.setVerbose(showAll);
 }
-util.inherits(MyConnection, LineConnection);
 
-MyConnection.prototype.start = function()
+function startServer(port, cb)
 {
-    this.write("Hello");
-};
-
-MyConnection.prototype.onInputReceived = function(str)
-{
-    //console.log('got '+str);
-    this.write("I just got: "+str);
-};
-
-function TestServer(port)
-{
-    TestServer.super_.call(this, 'test', port);
+    var server = new TCPServer('test', port);
+    console.log(server);
+    server.on('listen', function() { useport = port; cb(); });
+    server.on('connection', function(conn) { startConnection(conn); });
+    server.on('error', function(err) { console.log('Trying to start server Got error: '+err); server.destroy(); });
+    server.setVerbose(showAll);
+    server.start();
 }
-util.inherits(TestServer, server);
-
-TestServer.enabled = false;
-
-TestServer.init = function(port, cb)
-{
-    //console.log("Trying: "+port);
-    TestServer.cb = cb;
-    TestServer.server = new TestServer(port);
-    TestServer.server.start();
-};
-
-TestServer.prototype.onListening = function() {
-    TestServer.enabled = true;
-    TestServer.cb();
-};
-
-TestServer.prototype.onError = function(err) 
-{
-    if (err.code == EADDRINUSE) TestServer.enabled = false;
-    else {
-	console.log("unknown error: "+err);
-    }
-};
-
-TestServer.prototype.setupConnection = function(conn) 
-{
-    return new MyConnection(this, conn);
-};
 
 function findport(port) {
-    TestServer.init(port, startClientTest);
+    startServer(port, startClientTest);
     setTimeout(function() {
-	    if (TestServer.enabled == true) return;
+	    if (serverstarted == 1) return;
 	    if (port < 9000) return findport(port+1);
 	    console.log("Could not find a port to listen on");
 	    process.exit(-1);
@@ -126,7 +97,6 @@ function startClientTest()
 {
     serverstarted = 1;
 
-    var useport = TestServer.server.port;
     console.log("Server started.  Clients to run on "+useport);
 
     var clients = [];
