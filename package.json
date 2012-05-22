@@ -16,8 +16,8 @@
   },
   "keywords": ["tcp", "tcpserver", "tcpclient"],
   "engines" : { "node": ">=0.6" },
-  "main" : "lib/simpletcp",
+  "main" : "./lib/simpletcp",
   "scripts": {
-     "test": "node test/basic.js"
+     "test": "node ./test/basic.js"
   }
 }
