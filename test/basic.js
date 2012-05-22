@@ -20,7 +20,6 @@ function startConnection(conn)
 function startServer(port, cb)
 {
     var server = new TCPServer('test', port);
-    console.log(server);
     server.on('listen', function() { useport = port; cb(); });
     server.on('connection', function(conn) { startConnection(conn); });
     server.on('error', function(err) { console.log('Trying to start server Got error: '+err); server.destroy(); });
@@ -34,7 +33,7 @@ function findport(port) {
 	    if (serverstarted == 1) return;
 	    if (port < 9000) return findport(port+1);
 	    console.log("Could not find a port to listen on");
-	    process.exit(-1);
+	    myexit(-1);
 	}, 200);
 }
 
@@ -107,33 +106,37 @@ var timer = 1000;
 function tooktoolong() 
 {
     if (timer-- < 0) {
-	console.log("Test timed out");
-	process.exit(-1);
+        console.log("Test timed out");
+        myexit(-1);
     }
 
     if ((timer % 10)==0) {
-	console.log(timer+" still executing ..."+serverstarted+" "+TestClient.clientsDone);
+        console.log(timer+" still executing ..."+serverstarted+" "+TestClient.clientsDone);
     }
 
     if (!serverstarted || !allfinished) {
-	setTimeout(tooktoolong, 250);
-	return;
+        setTimeout(tooktoolong, 250);
+        return;
     }
-    process.exit(0);
+    console.log("ok");
+    myexit(0);
 }
 setTimeout(tooktoolong, 250);
+
+function myexit(code)
+{
+    oktoexit = 0;
+    process.stdout.on('drain', function() { if (oktoexit == 1) process.exit(code); });
+    oktoexit = 1;
+    console.log("\n");
+}
 
 ////////////////////////////////////////////////////////////////
 // main entry point
 
 findport(8000);
 
-
 // Local Variables:
 // tab-width: 4
 // indent-tabs-mode: nil
 // End:
-
-
-
-
