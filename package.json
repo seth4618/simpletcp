@@ -1,6 +1,6 @@
 {
   "name": "simpletcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Seth <seth@flashgroup.com>",
   "contributors": [ 
     {
@@ -8,7 +8,7 @@
       "email": "seth@flashgroup.com"
     } 
   ],
-  "description": "simple line-based tcp client and server",
+  "description": "simple line-based/json-based tcp client and server",
   "homepage": "http://github.com/seth4618/simpletcp",
   "repository": {
     "type": "git",
