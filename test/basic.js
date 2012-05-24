@@ -1,3 +1,6 @@
+// copyright (c) 2012, flashgroup.com
+// Use at your own risk.
+
 // test starting a server, starting clients, echoing messages, notification of being done
 
 var assert = require('assert');
