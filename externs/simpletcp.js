@@ -167,6 +167,13 @@ TCPConnection.prototype.setVerbose = function(flag) {};
 TCPConnection.prototype.write = function(data) {};
 
 /**
+ * destory
+ * close and cleanup a socket
+ *
+ **/
+TCPConnection.prototype.destroy = function()  {};
+
+/**
  * JSONConnection
  * A tcp socket to a server which talks json in line chunks
  *
@@ -193,6 +200,15 @@ function JSONConnection(server, socket) {}
  * @param {*} obj
  **/
 JSONConnection.prototype.write = function(obj) {};
+
+/**
+ * makeNameUniversal
+ * make a named pipe name into a universally acceptable name (e.g., unix path -> windows wierdness if needed)
+ *
+ * @param {!string} name
+ * @return {!string}
+ **/
+function makeNameUniversal(name) {};
 
 // Local Variables:
 // indent-tabs-mode: nil
